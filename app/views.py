@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm,PostForm
-from django.db.models import Q, Count
+from django.db.models import Q, Count,Sum
 
 # Create your views here.
 def loginUser(request):
@@ -76,8 +76,12 @@ def logoutUser(request):
     return redirect("home")
 
 def home(request):
-    posts = Posts.objects.all().order_by("-created","-likes")[:10]
-    topics = Topic.objects.all()
+    q = request.GET.get("q") if request.GET.get("q") else ""
+
+    posts = Posts.objects.filter(
+        Q(body__icontains=q) | Q(topics__name=q) | Q(user__username__icontains=q)
+    ).order_by("-created","-likes")[:10]
+    topics = Topic.objects.annotate(total_posts=Count('posts__topics')).order_by("-total_posts")[:10]
 
     if request.method == "POST":
         body = request.POST.get("body")
@@ -101,6 +105,8 @@ def home(request):
     variables = {
         "posts":posts,
         "post_form":post_form,
+        "topics":topics,
+        # "page":"home",
     }
     return render(request,"index.html",variables)
 
@@ -149,10 +155,16 @@ def thread(request,pk):
     return render(request,"thread.html",variables)
 
 def profile(request,pk):
+    q = request.GET.get("q") if request.GET.get("q") else ""
     userdata = Udata.objects.get(userid=pk)
-    posts = Posts.objects.filter(user__id=pk).order_by("-created","-like")[:10]
+    posts = Posts.objects.filter(
+        Q(user__id=pk) & Q(Q(body__icontains=q) | Q(topics__name=q))
+    ).order_by("-created","-likes")[:10]
+    topics = Topic.objects.annotate(total_posts=Count('posts__topics')).order_by("-total_posts")[:10]
     variables = {
         "userdata":userdata,
         "posts":posts,
+        "topics":topics,
+        # "page":"profile",
     }
     return render(request,"profile.html",variables)

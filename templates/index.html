@@ -17,24 +17,30 @@ Y
             </h1>
         </div>
         <hr>
-        <div>
-            {% if request.user.is_authenticated %}
+        <div class="box">
             <div>
-                <h4>Say something!</h4>
-                <form method="POST" action="" class="form">
-                    {% csrf_token %}
-                    {{post_form.body}}
-                    <div class="">
-                        <button class="" type="submit" value="submit">
-                          Post
-                        </button>
-                      </div>
-                </form>
+                {% include "components/topic_component.html" %}
             </div>
-            <hr>
-            {% endif %}
-            {% include "components/feed_component.html" %}
+            <div>
+                {% if request.user.is_authenticated %}
+                <div>
+                    <h4>Say something!</h4>
+                    <form method="POST" action="" class="form">
+                        {% csrf_token %}
+                        {{post_form.body}}
+                        <div class="">
+                            <button class="" type="submit" value="submit">
+                            Post
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <hr>
+                {% endif %}
+                {% include "components/feed_component.html" %}
+            </div>
         </div>
+        
     </div>
 </main>
 

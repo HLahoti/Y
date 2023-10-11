@@ -11,9 +11,15 @@
             {{userdata.username}}
         </h1>
         <hr>
-        <div>
-            {% include "components/feed_component.html" %}
+        <div class="box">
+            <div>
+                {% include "components/topic_component.html" %}
+            </div>
+            <div>
+                {% include "components/feed_component.html" %}
+            </div>
         </div>
+        
     </div>
 </main>
 {% endblock content %}
