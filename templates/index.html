@@ -7,13 +7,19 @@ Y
 {% block content %}
 <main>
     <div>
-        <h1>
-            {% if request.user.is_authenticated %}
-            Hello {{request.user.username}}
-            {% else %}
-            Hello.
-            {% endif %} 
-        </h1>
+        <div>
+            <h1>
+                {% if request.user.is_authenticated %}
+                Hello <a href="{% url 'profile' request.user.id%}">{{request.user.username}}</a>
+                {% else %}
+                Hello.
+                {% endif %} 
+            </h1>
+        </div>
+        <hr>
+        <div>
+            {% include "components/feed_component.html" %}
+        </div>
     </div>
 </main>
 

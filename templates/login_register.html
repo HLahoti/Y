@@ -34,6 +34,11 @@ Register
                         Login
                     </button>
                 </div>
+                <div>
+                    Don't have an account yet? 
+                    <a href="{% url 'register' %}">Register</a>
+                </div>
+                
             {% else %}
                 {% comment %} {% for field in form %}
                 <div>

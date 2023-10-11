@@ -1,0 +1,9 @@
+{% for post in posts %}
+<div>
+    <h5>
+        @{{post.user.username}} {{post.created|timesince}} ago
+    </h4>
+    <h4>{{post.body}}</h4>
+    <h4>{{post.likes.all.count}} likes</h4>
+</div>
+{% endfor %}

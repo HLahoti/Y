@@ -76,5 +76,18 @@ def logoutUser(request):
     return redirect("home")
 
 def home(request):
-    variables = {}
+    posts = Posts.objects.all()
+    variables = {
+        "posts":posts,
+    }
     return render(request,"index.html",variables)
+
+
+def profile(request,pk):
+    userdata = Udata.objects.get(userid=pk)
+    posts = Posts.objects.filter(user__id=pk)
+    variables = {
+        "userdata":userdata,
+        "posts":posts,
+    }
+    return render(request,"profile.html",variables)

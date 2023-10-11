@@ -7,7 +7,13 @@
 {% block content %}
 <main>
     <div>
-        
+        <h1>
+            {{userdata.username}}
+        </h1>
+        <hr>
+        <div>
+            {% include "components/feed_component.html" %}
+        </div>
     </div>
 </main>
 {% endblock content %}
