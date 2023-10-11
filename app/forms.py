@@ -4,6 +4,7 @@ from .models import Udata,Topic,Posts
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+#depricated
 class UserRegistrationForm2(UserCreationForm):
 
     class META:
@@ -16,7 +17,6 @@ class UserRegistrationForm2(UserCreationForm):
             "password2",
         ]
         exclude = []
-
 
 class UserRegistrationForm(forms.Form):
     name = forms.CharField(max_length=100)
@@ -45,3 +45,16 @@ class UserRegistrationForm(forms.Form):
     def clean_email(self):
         email = self.cleaned_data["email"]
         return email
+
+class PostForm(ModelForm):
+    class Meta:
+        model=Posts
+        fields="__all__"
+        exclude = [
+            "user",
+            "parent",
+            "likes",
+            "topics",
+            "created",
+            "updated",
+        ]

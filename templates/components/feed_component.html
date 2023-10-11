@@ -1,9 +1,11 @@
 {% for post in posts %}
 <div>
     <h5>
-        @{{post.user.username}} {{post.created|timesince}} ago
+        <a href="{% url 'profile' post.user.id %}">@{{post.user.username}}</a> 
+        {{post.created|timesince}} ago
     </h4>
     <h4>{{post.body}}</h4>
-    <h4>{{post.likes.all.count}} likes</h4>
+    <h4>{{post.likes.all.count}} likes... <a href="{% url 'thread' post.id %}">See thread</a></h4> 
+    {% comment %} ? how to add like functionality without reloading page everytime? {% endcomment %}
 </div>
 {% endfor %}

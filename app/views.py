@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm,PostForm
 from django.db.models import Q, Count
 
 # Create your views here.
@@ -76,12 +76,65 @@ def logoutUser(request):
     return redirect("home")
 
 def home(request):
-    posts = Posts.objects.all()
+    posts = Posts.objects.all().order_by("-created","-likes")
+    topics = Topic.objects.all()
+
+    if request.method == "POST":
+        body = request.POST.get("body")
+        tagged = body.split()
+        post = Posts.objects.create(
+            user=request.user,
+            body=body
+        )
+        if len(tagged)>1:
+            tags = [i[1:31].lower() for i in tagged if i[0]=='#' and len(i)>2]
+            for i in tags:
+                if not Topic.objects.filter(name=i).exists():
+                    new_topic = Topic.objects.create(name=i)
+                    new_topic.save()
+                    post.topics.add(new_topic)
+        post.save()
+        return redirect("home")
+
+    post_form = PostForm()
+
     variables = {
         "posts":posts,
+        "post_form":post_form,
     }
     return render(request,"index.html",variables)
 
+def thread(request,pk):
+    og_post = Posts.objects.get(id=pk)
+    replies = Posts.objects.filter(parent=og_post).order_by("-created","-likes")
+
+    if request.method=="POST":
+        body = request.POST.get("body")
+        tagged = body.split()
+        post = Posts.objects.create(
+            user=request.user,
+            body=body,
+            parent=og_post
+        )
+        if len(tagged)>1:
+            tags = [i[1:31].lower() for i in tagged if i[0]=='#' and len(i)>2]
+            for i in tags:
+                if not Topic.objects.filter(name=i).exists():
+                    new_topic = Topic.objects.create(name=i)
+                    new_topic.save()
+                    post.topics.add(new_topic)
+        post.save()
+
+        return redirect("thread",pk=pk) 
+
+    post_form = PostForm()
+
+    variables = {
+        "post":og_post,
+        "posts":replies,
+        "post_form":post_form,
+    }
+    return render(request,"thread.html",variables)
 
 def profile(request,pk):
     userdata = Udata.objects.get(userid=pk)
