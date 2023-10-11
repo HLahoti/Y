@@ -8,13 +8,28 @@
 <main>
     <div>
         <div>
-            <h5>
-                <a href="{% url 'profile' post.user.id %}">@{{post.user.username}}</a> 
-                {{post.created|timesince}} ago
-            </h4>
-            <h4>{{post.body}}</h4>
-            <h4>{{post.likes.all.count}}</h4> 
-            {% comment %} ? how to add like functionality without reloading page everytime? {% endcomment %}
+            {% if parentage %}
+                {% for thread_post in thread %}
+                    <div>
+                        <h6>
+                            <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.username}}</a> 
+                            {{thread_post.created|timesince}} ago
+                        </h6>
+                        <h5>{{thread_post.body}}</h5>
+                        <h5>{{thread_post.likes.all.count}}</h5> 
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div>
+                <h5>
+                    <a href="{% url 'profile' post.user.id %}">@{{post.user.username}}</a> 
+                    {{post.created|timesince}} ago
+                </h5>
+                <h4>{{post.body}}</h4>
+                <h4>{{post.likes.all.count}}</h4> 
+                {% comment %} ? how to add like functionality without reloading page everytime? {% endcomment %}    
+            </div>
+            
         </div>
         <hr>
         <div>

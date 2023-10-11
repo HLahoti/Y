@@ -76,7 +76,7 @@ def logoutUser(request):
     return redirect("home")
 
 def home(request):
-    posts = Posts.objects.all().order_by("-created","-likes")
+    posts = Posts.objects.all().order_by("-created","-likes")[:10]
     topics = Topic.objects.all()
 
     if request.method == "POST":
@@ -87,7 +87,7 @@ def home(request):
             body=body
         )
         if len(tagged)>1:
-            tags = [i[1:31].lower() for i in tagged if i[0]=='#' and len(i)>2]
+            tags = [i[1:31].lower() for i in tagged if i[0]=='#' and len(i)>1]
             for i in tags:
                 if not Topic.objects.filter(name=i).exists():
                     new_topic = Topic.objects.create(name=i)
@@ -106,7 +106,14 @@ def home(request):
 
 def thread(request,pk):
     og_post = Posts.objects.get(id=pk)
-    replies = Posts.objects.filter(parent=og_post).order_by("-created","-likes")
+    replies = Posts.objects.filter(parent=og_post).order_by("-created","-likes")[:10]
+    parentage = True if og_post.parent else False
+    thread = []
+    thread_post = og_post
+    while(thread_post.parent and len(thread)<=3):
+        thread_post = thread_post.parent
+        thread.append(thread_post)
+    thread = thread[::-1]
 
     if request.method=="POST":
         body = request.POST.get("body")
@@ -117,11 +124,14 @@ def thread(request,pk):
             parent=og_post
         )
         if len(tagged)>1:
-            tags = [i[1:31].lower() for i in tagged if i[0]=='#' and len(i)>2]
+            tags = [i[1:31].lower() for i in tagged if i[0]=='#' and len(i)>1]
             for i in tags:
                 if not Topic.objects.filter(name=i).exists():
                     new_topic = Topic.objects.create(name=i)
                     new_topic.save()
+                    post.topics.add(new_topic)
+                else:
+                    new_topic = Topic.objects.get(name=i)
                     post.topics.add(new_topic)
         post.save()
 
@@ -133,12 +143,14 @@ def thread(request,pk):
         "post":og_post,
         "posts":replies,
         "post_form":post_form,
+        "parentage":parentage,
+        "thread":thread,
     }
     return render(request,"thread.html",variables)
 
 def profile(request,pk):
     userdata = Udata.objects.get(userid=pk)
-    posts = Posts.objects.filter(user__id=pk)
+    posts = Posts.objects.filter(user__id=pk).order_by("-created","-like")[:10]
     variables = {
         "userdata":userdata,
         "posts":posts,
