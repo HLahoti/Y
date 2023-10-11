@@ -9,43 +9,47 @@ Register
 {% endblock title %}
 
 {% block content %}
-<h1>
-    {% if page == 'login' %}
-    Login
-    {% else %}
-    Register
-    {% endif %}   
-</h1>
-<form class="form" action="" method="POST">
-    {% csrf_token %}
-    {% if page == 'login' %}
-        <div>
-            <label for="username">Username</label>
-            <input type="text" name="username" required/>
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" name="password"/>
-        </div>
-        <div class="">
-            <button class="" type="submit" value="submit">
-                Login
-            </button>
-        </div>
-    {% else %}
-        {% comment %} {% for field in form %}
-        <div>
-            <label for="{{field.name}}">{{field.name}}</label>
-            {{field}}
-        </div>
-        {% endfor %} {% endcomment %}
-        {{form.as_p}}
-        <div class="">
-            <button class="" type="submit" value="submit">
-                Register
-            </button>
-        </div>
-    {% endif %}
-    
-</form>
+<main>
+    <div>
+        <h1>
+            {% if page == 'login' %}
+            Login
+            {% else %}
+            Register
+            {% endif %}   
+        </h1>
+        <form class="form" action="" method="POST">
+            {% csrf_token %}
+            {% if page == 'login' %}
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" name="username" required/>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" name="password"/>
+                </div>
+                <div class="">
+                    <button class="" type="submit" value="submit">
+                        Login
+                    </button>
+                </div>
+            {% else %}
+                {% comment %} {% for field in form %}
+                <div>
+                    <label for="{{field.name}}">{{field.name}}</label>
+                    {{field}}
+                </div>
+                {% endfor %} {% endcomment %}
+                {{form.as_p}}
+                <div class="">
+                    <button class="" type="submit" value="submit">
+                        Register
+                    </button>
+                </div>
+            {% endif %}
+        
+        </form>
+    </div>
+</main>
 {% endblock content %}

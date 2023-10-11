@@ -5,7 +5,17 @@ Y
 {% endblock title %}
 
 {% block content %}
+<main>
+    <div>
+        <h1>
+            {% if request.user.is_authenticated %}
+            Hello {{request.user.username}}
+            {% else %}
+            Hello.
+            {% endif %} 
+        </h1>
+    </div>
+</main>
 
-<h1>Y</h1>
 
 {% endblock content %}
