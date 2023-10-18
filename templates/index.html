@@ -5,40 +5,26 @@ Y
 {% endblock title %}
 
 {% block content %}
-<main>
-    <div>
-        <div>
-            <h1>
-                {% if request.user.is_authenticated %}
-                Hello <a href="{% url 'profile' request.user.id%}">{{request.user.username}}</a>
-                {% else %}
-                Hello.
-                {% endif %} 
-            </h1>
-        </div>
-        <hr>
-        <div class="box">
-            <div>
-                {% include "components/topic_component.html" %}
+<main class="layout layout--2">
+    <div class="container">
+
+        {% include "components/topic_component.html" %}
+        
+        <div class=postList>
+            {% if request.user.is_authenticated %}
+            <div class="postList__header">  
+                <form method="POST" action="" class="form">
+                    {% csrf_token %}
+                    {{post_form.body}}
+                    <div class="form__action">
+                        <button class="btn btn--main" type="submit" value="submit">
+                        Post
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div>
-                {% if request.user.is_authenticated %}
-                <div>
-                    <h4>Say something!</h4>
-                    <form method="POST" action="" class="form">
-                        {% csrf_token %}
-                        {{post_form.body}}
-                        <div class="">
-                            <button class="" type="submit" value="submit">
-                            Post
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <hr>
-                {% endif %}
-                {% include "components/feed_component.html" %}
-            </div>
+            {% endif %}
+            {% include "components/feed_component.html" %}
         </div>
         
     </div>

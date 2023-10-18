@@ -58,3 +58,8 @@ class PostForm(ModelForm):
             "created",
             "updated",
         ]
+        widgets={
+            'body': forms.Textarea(
+                attrs={'placeholder':'Say something!'}
+            ),
+        }

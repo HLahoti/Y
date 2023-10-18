@@ -168,3 +168,8 @@ def profile(request,pk):
         # "page":"profile",
     }
     return render(request,"profile.html",variables)
+
+# @login_required
+# def update_user(request):
+#     user = request.user
+#     form = UserRegistrationForm(instance=user)

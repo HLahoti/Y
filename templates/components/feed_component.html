@@ -1,7 +1,7 @@
 <div>
     {% for post in posts %}
 
-    <div>
+    <div class=postListPost>
         <h5>
             <a href="{% url 'profile' post.user.id %}">@{{post.user.username}}</a> 
             {{post.created|timesince}} ago
@@ -9,7 +9,7 @@
         <h4>{{post.body}}</h4>
         <h4>{{post.likes.all.count}} likes... <a href="{% url 'thread' post.id %}">See thread</a></h4> 
         {% comment %} ? how to add like functionality without reloading page everytime? {% endcomment %}
+        {% comment %} ? how to add link to topic for each mention of the topic in the post? {% endcomment %}
     </div>
-    <hr>
     {% endfor %}
 </div>
