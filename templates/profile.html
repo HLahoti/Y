@@ -5,21 +5,22 @@
 {% endblock title %}
 
 {% block content %}
-<main>
-    <div>
-        <h1>
-            {{userdata.username}}
-        </h1>
-        <hr>
-        <div class="box">
-            <div>
-                {% include "components/topic_component.html" %}
+<main class="layout layout--2">
+    <div class="container">
+
+        {% include "components/topic_component.html" %}
+
+        <div class="postList">
+            <div class="postList__header vert">
+                <h2>
+                    {{userdata.username}}
+                </h2>
+                <h3>
+                    {{userdata.name}}
+                </h3>
             </div>
-            <div>
-                {% include "components/feed_component.html" %}
-            </div>
+            {% include "components/feed_component.html" %}
         </div>
-        
     </div>
 </main>
 {% endblock content %}

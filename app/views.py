@@ -81,6 +81,7 @@ def home(request):
     posts = Posts.objects.filter(
         Q(body__icontains=q) | Q(topics__name=q) | Q(user__username__icontains=q)
     ).order_by("-created","-likes")[:10]
+
     topics = Topic.objects.annotate(total_posts=Count('posts__topics')).order_by("-total_posts")[:10]
 
     if request.method == "POST":
@@ -160,6 +161,7 @@ def profile(request,pk):
     posts = Posts.objects.filter(
         Q(user__id=pk) & Q(Q(body__icontains=q) | Q(topics__name=q))
     ).order_by("-created","-likes")[:10]
+    
     topics = Topic.objects.annotate(total_posts=Count('posts__topics')).order_by("-total_posts")[:10]
     variables = {
         "userdata":userdata,

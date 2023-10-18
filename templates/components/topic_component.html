@@ -1,14 +1,12 @@
-<div>
-    <div>
-        <h5>
-        <a href="{% url 'home' %}">All</a>
-        </h5>
-    </div>
-    {% for topic in topics %}
-    <div>
-        <h5>
-        <a href="{% url 'home' %}?q={{topic.name}}">#{{topic.name}}</a>
-        </h5>
-    </div>
-    {% endfor %}
+<div class="topics">
+    <ul class="topics__list">
+        <li>
+            <a href="{% url 'home' %}" class="active" >All</a>
+        </li>
+        {% for topic in topics %}
+        <li>
+            <a href="{% url 'home' %}?q={{topic.name}}">#{{topic.name}} <span>{{topic.total_posts}}</span></a>
+        </li>
+        {% endfor %}    
+    </ul>
 </div>

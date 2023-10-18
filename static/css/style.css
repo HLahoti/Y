@@ -560,6 +560,15 @@ a {
 =>  Topics
 ================================*/
 
+.topics {
+    padding: 2.5rem;
+    margin: 2.5rem;
+    margin-top: 0;
+    padding-top: 0;
+    width: 30%;
+    flex-shrink: 1;
+}
+
 .topics__header {
     margin-bottom: 2rem;
 }
@@ -572,13 +581,15 @@ a {
 
 .topics__list {
     list-style: none;
+    justify-content: center;
 }
 
 .topics__list li a {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 3rem;
-    font-weight: 500;
+    margin-bottom: 2.5rem;
+    font-weight: 700;
+    font-size: larger;
     color: var(--color-light-gray);
     transition: all 0.3s ease-in-out;
 }
@@ -631,8 +642,18 @@ a {
     width: 100%;
 }
 
+.vert {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    margin-bottom: 2.4rem;
+    width: 100%;
+    align-items: center;
+}
+
 .postList__header>h2 {
     text-transform: uppercase;
+    font-size: 3rem;
     font-weight: 500;
     color: var(--color-light);
     letter-spacing: 1px;
