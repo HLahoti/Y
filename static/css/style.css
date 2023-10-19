@@ -399,6 +399,21 @@ a {
     align-items: flex-start;
 }
 
+.layout--1 {
+    margin-top: 3rem;
+}
+
+.layout--1 .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+.layout--1 .container div {
+    width: 100%;
+}
+
 .layout--3>.container>div:first-child {
     flex-basis: 18%;
     max-width: 22.5rem;
@@ -536,6 +551,7 @@ a {
 .form__action {
     display: flex;
     justify-content: flex-end;
+    width: fit-content;
     gap: 3rem;
 }
 
@@ -666,6 +682,13 @@ a {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+}
+
+.postList__header .form__action {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    gap: 3rem;
 }
 
 .postList__header>p {

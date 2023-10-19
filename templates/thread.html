@@ -5,51 +5,51 @@
 {% endblock title %}
 
 {% block content %}
-<main>
-    <div>
-        <div>
+<main class="layout--1">
+    <div class="container">
+
+        <div class="postList">
             {% if parentage %}
                 {% for thread_post in thread %}
-                    <div>
+                    <div class=postListPost>
                         <h6>
-                            <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.username}}</a> 
+                            <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.udata.username}}</a> 
                             {{thread_post.created|timesince}} ago
                         </h6>
                         <h5>{{thread_post.body}}</h5>
-                        <h5>{{thread_post.likes.all.count}}</h5> 
+                        <h5>
+                            {{thread_post.likes.all.count}} likes
+                            | <a href="{% url 'thread' thread_post.id %}">See thread</a></h5> 
                     </div>
                 {% endfor %}
             {% endif %}
-            <div>
+            <div class="postListPost">
                 <h5>
                     <a href="{% url 'profile' post.user.id %}">@{{post.user.username}}</a> 
                     {{post.created|timesince}} ago
                 </h5>
                 <h4>{{post.body}}</h4>
                 <h4>{{post.likes.all.count}}</h4> 
-                {% comment %} ? how to add like functionality without reloading page everytime? {% endcomment %}    
             </div>
-            
         </div>
-        <hr>
-        <div>
+
+        <div class=postList>
             {% if request.user.is_authenticated %}
-            <div>
-                <h4>Join the conversation!</h4>
+            <div class="postList__header">  
                 <form method="POST" action="" class="form">
                     {% csrf_token %}
                     {{post_form.body}}
-                    <div class="">
-                        <button class="" type="submit" value="submit">
-                          Post
+                    <div class="form__action">
+                        <button class="btn btn--main" type="submit" value="submit">
+                        Post
                         </button>
-                      </div>
+                    </div>
                 </form>
             </div>
-            <hr>
             {% endif %}
             {% include "components/feed_component.html" %}
         </div>
+        
     </div>
     
 </main>

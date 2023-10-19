@@ -5,7 +5,10 @@
         </li>
         {% for topic in topics %}
         <li>
-            <a href="{% url 'home' %}?q={{topic.name}}">#{{topic.name}} <span>{{topic.total_posts}}</span></a>
+            <a href="{% url 'home' %}?q={{topic.name}}">
+                #{{topic.name}} 
+                {% comment %} <span>{{topic.total_posts}}</span> {% endcomment %}
+            </a>
         </li>
         {% endfor %}    
     </ul>

@@ -25,6 +25,12 @@ class UserRegistrationForm(forms.Form):
     password1 = forms.CharField(widget = forms.PasswordInput()) 
     password2 = forms.CharField(widget = forms.PasswordInput()) 
 
+    widgets={
+            'password1': forms.TextInput(
+                attrs={'label':'Password'}
+            ),
+        }
+
     def clean_password1(self):
         if 'password1' in self.cleaned_data:
             password1 = self.cleaned_data['password1']

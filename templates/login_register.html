@@ -9,52 +9,66 @@ Register
 {% endblock title %}
 
 {% block content %}
-<main>
-    <div>
-        <h1>
-            {% if page == 'login' %}
-            Login
-            {% else %}
-            Register
-            {% endif %}   
-        </h1>
-        <form class="form" action="" method="POST">
-            {% csrf_token %}
-            {% if page == 'login' %}
-                <div>
-                    <label for="username">Username</label>
-                    <input type="text" name="username" required/>
-                </div>
-                <div>
-                    <label for="password">Password</label>
-                    <input type="password" name="password"/>
-                </div>
-                <div class="">
-                    <button class="" type="submit" value="submit">
+<main class="auth layout">
+    <div class="container">
+        <div class="layout__box">
+            <div class="layout__boxHeader">
+                <div  class="layout__boxTitle">
+                    <h3>
+                        {% if page == 'login' %}
                         Login
-                    </button>
-                </div>
-                <div>
-                    Don't have an account yet? 
-                    <a href="{% url 'register' %}">Register</a>
-                </div>
-                
-            {% else %}
-                {% comment %} {% for field in form %}
-                <div>
-                    <label for="{{field.name}}">{{field.name}}</label>
-                    {{field}}
-                </div>
-                {% endfor %} {% endcomment %}
-                {{form.as_p}}
-                <div class="">
-                    <button class="" type="submit" value="submit">
+                        {% else %}
                         Register
-                    </button>
+                        {% endif %}   
+                    </h3>
                 </div>
-            {% endif %}
-        
-        </form>
+            </div>
+
+            <div class="layout__body">
+                <form class="form" action="" method="POST">
+                    {% csrf_token %}
+                    {% if page == 'login' %}
+                        <div class="form__group form__group">
+                            <label for="username">Username</label>
+                            <input type="text" name="username" required/>
+                        </div>
+                        <div class="form__group">
+                            <label for="password">Password</label>
+                            <input type="password" name="password"/>
+                        </div>
+                        <div class="btn btn--main" >
+                            <button class="" type="submit" value="submit">
+                                Login
+                            </button>
+                        </div>
+                        <div class="auth__action">
+                            <p>Don't have an account yet? </p>
+                            <a href="{% url 'register' %}" class="btn btn--link">Register</a>
+                        </div>
+                        
+                    {% else %}
+                        {% comment %} {% for field in form %}
+                        <div>
+                            <label for="{{field.name}}">{{field.name}}</label>
+                            {{field}}
+                        </div>
+                        {% endfor %} {% endcomment %}
+                        {% comment %} {{form.as_p}} {% endcomment %}
+                        {% for field in form %}
+                        <div class="form__group form__group">
+                            <label for="{{field.name}}">{{field.label}}</label>
+                            {{field}}
+                        </div>
+                        {% endfor %}
+                        <div class="form__group">
+                            <button class="btn btn--main" type="submit" value="submit">
+                                Register
+                            </button>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
     </div>
 </main>
 {% endblock content %}
