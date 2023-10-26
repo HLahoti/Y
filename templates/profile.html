@@ -7,21 +7,30 @@
 {% block content %}
 <main class="layout layout--2">
     <div class="container">
-
         {% include "components/topic_component.html" %}
-
+        
         <div class="postList">
             <div class="postList__header vert">
-                <h2>
-                    {{userdata.username}}
-                </h2>
-                <h3>
-                    {{userdata.name}}
-                </h3>
+                <div class="avatar avatar--large active">
+                    <img  src="{{ userdata.avatar.url }}">
+                </div>
+                <div class="media-body">
+                    <h2 class="account-heading">{{ userdata.username }}</h2>
+                    <p class="text-secondary"><strong>Contact</strong> - {{ userdata.email }}</p>
+                    <p><strong>Bio</strong> - {{ userdata.bio }}</p>
+                </div>
+                <div>
+                    {% if request.user.is_authenticated and request.user.username == userdata.username %}
+                        <a href="{% url 'update-user' request.user.id %}"> Update Profile </a>
+                    {% endif %}
+                </div>
             </div>
-            {% include "components/feed_component.html" %}
+            <h3>{{ userdata.username }}'s posts</h3>
+            <hr>
+            <div>
+                {% include "components/feed_component.html" %}
+            </div>
         </div>
-        
     </div>
 </main>
 {% endblock content %}

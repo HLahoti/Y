@@ -12,6 +12,11 @@
             {% if parentage %}
                 {% for thread_post in thread %}
                     <div class=postListPost>
+                        {% if request.user.is_authenticated %}
+                            <div class="avatar avatar--small">
+                                <img src="{{ thread_post.user.udata.avatar.url }}">
+                            </div>
+                        {% endif %}
                         <h6>
                             <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.udata.username}}</a> 
                             {{thread_post.created|timesince}} ago
@@ -24,12 +29,17 @@
                 {% endfor %}
             {% endif %}
             <div class="postListPost">
+                {% if request.user.is_authenticated %}
+                    <div class="avatar avatar--small active">
+                        <img src="{{ post.user.udata.avatar.url }}">
+                    </div>
+                {% endif %}
                 <h5>
                     <a href="{% url 'profile' post.user.id %}">@{{post.user.username}}</a> 
                     {{post.created|timesince}} ago
                 </h5>
                 <h4>{{post.body}}</h4>
-                <h4>{{post.likes.all.count}}</h4> 
+                <h4>{{post.likes.all.count}} likes</h4> 
             </div>
         </div>
 

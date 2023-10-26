@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm,PostForm
-from django.db.models import Q, Count,Sum
+from .forms import UserRegistrationForm,PostForm, UserUpdateForm
+from django.db.models import Q, Count, Sum
 
 # Create your views here.
 def loginUser(request):
@@ -61,7 +61,8 @@ def registerUser(request):
                         email = user.email,
                     )
                     udata.save()
-                    return redirect("login")
+                messages.success(request, f'Account created for { udata.username }!')
+                return redirect("login")
 
     form = UserRegistrationForm()
     page = 'register'
@@ -81,8 +82,9 @@ def home(request):
     posts = Posts.objects.filter(
         Q(body__icontains=q) | Q(topics__name=q) | Q(user__username__icontains=q)
     ).order_by("-created","-likes")[:10]
+    topics = Topic.objects.annotate(total_posts=Count('posts')).order_by("-total_posts")
+    topics = topics[:10]
 
-    topics = Topic.objects.annotate(total_posts=Count('posts__topics')).order_by("-total_posts")[:10]
 
     if request.method == "POST":
         body = request.POST.get("body")
@@ -97,7 +99,9 @@ def home(request):
                 if not Topic.objects.filter(name=i).exists():
                     new_topic = Topic.objects.create(name=i)
                     new_topic.save()
-                    post.topics.add(new_topic)
+                else:
+                    new_topic = Topic.objects.get(name=i)
+                post.topics.add(new_topic)
         post.save()
         return redirect("home")
 
@@ -139,7 +143,7 @@ def thread(request,pk):
                     post.topics.add(new_topic)
                 else:
                     new_topic = Topic.objects.get(name=i)
-                    post.topics.add(new_topic)
+                post.topics.add(new_topic)
         post.save()
 
         return redirect("thread",pk=pk) 
@@ -175,3 +179,19 @@ def profile(request,pk):
 # def update_user(request):
 #     user = request.user
 #     form = UserRegistrationForm(instance=user)
+
+@login_required
+def userupdate(request, pk):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, request.FILES, instance=request.user.udata)
+        if u_form.is_valid():
+            u_form.save()
+            username = u_form.cleaned_data.get('username')
+            messages.success(request, f'Profile updated for { username }!')
+            return redirect('profile', pk=pk)
+    else:
+        up_form = UserUpdateForm(instance=request.user.udata)
+        context = {
+            'up_form': up_form,
+        }
+        return render(request, "userupdate.html", context)

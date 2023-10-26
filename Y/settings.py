@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'crispy_forms',
+    'crispy_bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,9 +79,9 @@ WSGI_APPLICATION = 'Y.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "ydb",
+        'NAME': "y_db",
         'USER': 'yadmin',
-        'PASSWORD': 'ypassword123',
+        'PASSWORD': 'Ypassword',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -120,6 +122,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STATIC_URL = 'static/'
 
 MEDIA_URL = "assets/"

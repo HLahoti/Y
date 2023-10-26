@@ -1,13 +1,13 @@
 <div class="topics">
-    <ul class="topics__list">
+    <ul class="topics__list" style="display: block; flex: auto;">
         <li>
-            <a href="{% url 'home' %}" class="active" >All</a>
+            <a href="{% url 'home' %}" class="active" >All Topics</a>
         </li>
         {% for topic in topics %}
         <li>
             <a href="{% url 'home' %}?q={{topic.name}}">
                 #{{topic.name}} 
-                {% comment %} <span>{{topic.total_posts}}</span> {% endcomment %}
+                <span>{{topic.total_posts}}</span>
             </a>
         </li>
         {% endfor %}    

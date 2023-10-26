@@ -188,7 +188,7 @@ a {
     display: block;
     width: 8rem;
     height: 8rem;
-    border-radius: 50%;
+    border-radius: 70%;
 }
 
 .avatar.avatar--large:after {
@@ -283,8 +283,8 @@ a {
 }
 
 .header__logo>img {
-    height: 3.2rem;
-    width: 3.2rem;
+    height: 4rem;
+    width: 4rem;
 }
 
 .header__logo>h1 {
@@ -479,6 +479,7 @@ a {
 
 .layout__body {
     margin: 3rem;
+    height: auto;
 }
 
 @media screen and (max-width: 900px) {

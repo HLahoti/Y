@@ -3,9 +3,14 @@
 
     <div class=postListPost>
         <h5>
+                {% if request.user.is_authenticated %}
+                    <div class="avatar avatar--small active">
+                        <img  src="{{ post.user.udata.avatar.url }}">
+                    </div>
+                {% endif %}
             <a href="{% url 'profile' post.user.id %}">@{{post.user.udata.username}}</a> 
             {{post.created|timesince}} ago
-        </h4>
+        </h5>
         <h4>{{post.body}}</h4>
         <h4>
             {% comment %} <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">

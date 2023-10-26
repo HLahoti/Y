@@ -69,3 +69,8 @@ class PostForm(ModelForm):
                 attrs={'placeholder':'Say something!'}
             ),
         }
+
+class UserUpdateForm(ModelForm):
+    class Meta:
+        model = Udata
+        fields = ['username', 'bio', 'avatar']
