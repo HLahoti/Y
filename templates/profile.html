@@ -1,5 +1,5 @@
 {% extends "base_templates/main.html" %}
-
+{% load static %}
 {% block title %}
 {{userdata.username}}
 {% endblock title %}
@@ -11,13 +11,21 @@
         
         <div class="postList">
             <div class="postList__header vert">
-                <div class="avatar avatar--large active">
-                    <img  src="{{ userdata.avatar.url }}">
-                </div>
-                <div class="media-body">
-                    <h2 class="account-heading">{{ userdata.username }}</h2>
-                    <p class="text-secondary"><strong>Contact</strong> - {{ userdata.email }}</p>
-                    <p><strong>Bio</strong> - {{ userdata.bio }}</p>
+                {% if user.is_authenticated %}
+                    <div class="avatar avatar--large active">
+                        <img  src="{{ userdata.avatar.url }}">
+                    </div>
+                {% else %}
+                    <div class="avatar avatar--large active">
+                        <img src="{% static 'assets/avatar.svg' %}" />
+                    </div>
+                {% endif %}
+                <div class="account">
+                    <h2 class="account-heading" style="text-align: center;">{{ userdata.username }}</h2>
+                    {% if user.is_authenticated %}
+                    <p class="text-secondary"><strong>Email</strong>: {{ userdata.email }}</p>
+                    <p><strong>Bio</strong>: {{ userdata.bio }}</p>
+                    {% endif %}
                 </div>
                 <div>
                     {% if request.user.is_authenticated and request.user.username == userdata.username %}
@@ -25,7 +33,7 @@
                     {% endif %}
                 </div>
             </div>
-            <h3>{{ userdata.username }}'s posts</h3>
+            <h3>Posts by {{ userdata.username }}</h3>
             <hr>
             <div>
                 {% include "components/feed_component.html" %}

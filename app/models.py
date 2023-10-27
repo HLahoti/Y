@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+from django.urls import reverse
 
 
 class Topic(models.Model):
@@ -33,3 +34,6 @@ class Posts(models.Model):
 
     def __str__(self):
         return str(self.body[:50])
+    
+    def get_absolute_url(self):
+        return reverse('home')

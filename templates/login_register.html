@@ -47,13 +47,13 @@ Register
                         </div>
                         
                     {% else %}
-                        {% comment %} {% for field in form %}
+                        <!-- {% comment %} {% for field in form %}
                         <div>
                             <label for="{{field.name}}">{{field.name}}</label>
                             {{field}}
                         </div>
                         {% endfor %} {% endcomment %}
-                        {% comment %} {{form.as_p}} {% endcomment %}
+                        {% comment %} {{form.as_p}} {% endcomment %} -->
                         {% for field in form %}
                         <div class="form__group form__group">
                             <label for="{{field.name}}">{{field.label}}</label>

@@ -12,34 +12,62 @@
             {% if parentage %}
                 {% for thread_post in thread %}
                     <div class=postListPost>
-                        {% if request.user.is_authenticated %}
-                            <div class="avatar avatar--small">
-                                <img src="{{ thread_post.user.udata.avatar.url }}">
-                            </div>
-                        {% endif %}
-                        <h6>
+                        <div class="layout__boxTitle">
+                            {% if request.user.is_authenticated %}
+                                <div class="avatar avatar--small">
+                                    <img src="{{ thread_post.user.udata.avatar.url }}">
+                                </div>
+                            {% endif %}
                             <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.udata.username}}</a> 
-                            {{thread_post.created|timesince}} ago
-                        </h6>
+                            <div style="float: inline-end;">
+                                {{thread_post.created|timesince}} ago
+                            </div>
+                        </div>
+                        <hr>
                         <h5>{{thread_post.body}}</h5>
+                        <form action="{% url 'like-post' thread_post.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn--link" name="post_id" type="submit" value="{{ thread_post.id }}">
+                            Like
+                            </button>
+                        </form>              
                         <h5>
-                            {{thread_post.likes.all.count}} likes
-                            | <a href="{% url 'thread' thread_post.id %}">See thread</a></h5> 
+                            {{ thread_post.likes.count }} likes
+                        |    <a href="{% url 'thread' thread_post.id %}">See thread</a>
+                        </h5> 
                     </div>
                 {% endfor %}
             {% endif %}
             <div class="postListPost">
-                {% if request.user.is_authenticated %}
-                    <div class="avatar avatar--small active">
-                        <img src="{{ post.user.udata.avatar.url }}">
-                    </div>
-                {% endif %}
                 <h5>
+                    {% if request.user.is_authenticated %}
+                        <div class="avatar avatar--small active">
+                            <img src="{{ post.user.udata.avatar.url }}">
+                        </div>
+                    {% endif %}
                     <a href="{% url 'profile' post.user.id %}">@{{post.user.username}}</a> 
-                    {{post.created|timesince}} ago
+                    <div style="float: inline-end;">
+                        {{post.created|timesince}} ago
+                    </div>
                 </h5>
+                <hr>
+
                 <h4>{{post.body}}</h4>
-                <h4>{{post.likes.all.count}} likes</h4> 
+                <form action="{% url 'like-post' post.id %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn--link" name="post_id" id="like-button" type="submit" value="{{ post.id }}">
+                        Like
+                    </button>
+                </form>
+                <h4>{{ post.likes.count }} likes</h4>
+                {% if request.user.is_authenticated and request.user == post.user %}
+                <span>
+                    <a href="{% url 'post-update' post.id %}" class="btn btn--link" style="position: relative; right: auto;"> Update </a>
+                </span>
+                <span>
+                    <a href="{% url 'post-delete' post.id %}" class="btn btn--link" style="position: relative; right: auto;"> Delete </a>
+                </span>
+            {% endif %}
             </div>
         </div>
 

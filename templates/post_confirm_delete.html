@@ -1,0 +1,40 @@
+{% extends "base_templates/main.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="layout__box">
+            <div class="layout__boxHeader">
+                <div class="layout__boxTitle">
+                    <div class="avatar avatar--large">
+                        <img src="{{ user.udata.avatar.url }}">
+                    </div>
+                    <div style="float: inline-end;">
+                        <span>
+                            <h2 class="account-heading">{{ user.username }}</h2>
+                        </span>
+                        <span>
+                            <p class="text-secondary">{{ user.email }}</p>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="layout__body">
+                <form method="POST">
+                    {% csrf_token %}
+                        <!-- <legend class="border-bottom mb-4">Delete Post</legend> -->
+                    <h2>Are you sure, you want to <strong>delete</strong> the post ?</h2>
+                    <div class="postListPost">
+                        <h3>Author - <i>{{ object.user }}</i></h3>
+                        <h4>Content - {{ object.body }}</h4>
+                    </div>
+                    <div class="form__action">
+                        <button type="submit" class="btn btn--main">Delete</button>
+                        <div style="float: inline-end;">
+                            <a href="{% url 'thread' object.id %}" class="btn btn--main">Back to post</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

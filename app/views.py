@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from .models import Udata,Topic,Posts
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -6,6 +6,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm,PostForm, UserUpdateForm
 from django.db.models import Q, Count, Sum
+from django.urls import reverse, reverse_lazy
+from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import DeleteView, UpdateView
 
 # Create your views here.
 def loginUser(request):
@@ -85,7 +89,6 @@ def home(request):
     topics = Topic.objects.annotate(total_posts=Count('posts')).order_by("-total_posts")
     topics = topics[:10]
 
-
     if request.method == "POST":
         body = request.POST.get("body")
         tagged = body.split()
@@ -108,9 +111,9 @@ def home(request):
     post_form = PostForm()
 
     variables = {
-        "posts":posts,
-        "post_form":post_form,
-        "topics":topics,
+        "posts": posts,
+        "post_form": post_form,
+        "topics": topics,
         # "page":"home",
     }
     return render(request,"index.html",variables)
@@ -147,9 +150,8 @@ def thread(request,pk):
         post.save()
 
         return redirect("thread",pk=pk) 
-
+    
     post_form = PostForm()
-
     variables = {
         "post":og_post,
         "posts":replies,
@@ -195,3 +197,34 @@ def userupdate(request, pk):
             'up_form': up_form,
         }
         return render(request, "userupdate.html", context)
+
+@login_required
+def likepost(request, pk):
+    post = get_object_or_404(Posts, id=request.POST.get('post_id'))
+    if request.user.udata not in post.likes.all():
+        post.likes.add(request.user.udata)
+        post.save()
+    return HttpResponseRedirect(reverse('thread', args=[str(pk)]))
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Posts
+    fields = ['body']
+    template_name = 'post_form.html'
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.user:
+            return True
+        return False 
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Posts
+    template_name = 'post_confirm_delete.html'
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.user:
+            return True
+        return False
+    success_url = reverse_lazy('home')

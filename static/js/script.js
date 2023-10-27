@@ -67,3 +67,10 @@ if (photoInput)
 // Scroll to Bottom
 const conversationThread = document.querySelector(".room__box");
 if (conversationThread) conversationThread.scrollTop = conversationThread.scrollHeight;
+
+document.getElementById('like-button').addEventListener('click', function () {
+  // Perform the AJAX request to like the post
+  // After successfully liking the post, navigate back to the previous page
+  console.log("successfully like post...");
+  window.history.back();
+});

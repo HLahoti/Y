@@ -1,12 +1,11 @@
 {% extends "base_templates/main.html" %}
-{% load crispy_forms_tags %}
 
 {% block content %}
     <div class="container">
         <div class="layout__box">
             <div class="layout__boxHeader">
                 <div class="layout__boxTitle">
-                    <div class="avatar avatar--large active">
+                    <div class="avatar avatar--large">
                         <img src="{{ user.udata.avatar.url }}">
                     </div>
                     <div style="float: inline-end;">
@@ -20,20 +19,18 @@
                 </div>
             </div>
             <div class="layout__body">
-                <!-- FORM HERE -->
-                <h3 style="text-align: center;">Profile Info</h3>
                 <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                    <!-- <legend class="">Profile Info</legend> -->
-                    {% for field in up_form %}
+                    {% csrf_token %}
+                        <!-- <legend class="border-bottom mb-4">Blog Post</legend> -->
+                    {% for field in form %}
                     <div class="form__group form__group">
                         <label for="{{field.name}}">{{ field.label }}</label>
                         {{ field }}
                     </div>
                     {% endfor %}
-                <div class="form__group"> 
-                    <button type="submit" class="btn btn--main">Update</button>
-                </div>
+                    <div class="form__action">
+                        <button type="submit" class="btn btn--main">Update</button>
+                    </div>
                 </form>
             </div>
         </div>
