@@ -13,11 +13,11 @@
                 {% for thread_post in thread %}
                     <div class=postListPost>
                         <div class="layout__boxTitle">
-                            {% if request.user.is_authenticated %}
-                                <div class="avatar avatar--small">
+                            <div class="avatar avatar--medium">
+                                {% if request.user.is_authenticated %}
                                     <img src="{{ thread_post.user.udata.avatar.url }}">
-                                </div>
-                            {% endif %}
+                                {% endif %}
+                            </div>
                             <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.udata.username}}</a> 
                             <div style="float: inline-end;">
                                 {{thread_post.created|timesince}} ago
@@ -25,12 +25,17 @@
                         </div>
                         <hr>
                         <h5>{{thread_post.body}}</h5>
-                        <form action="{% url 'like-post' thread_post.id %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn btn--link" name="post_id" type="submit" value="{{ thread_post.id }}">
-                            Like
+                        <div>
+                            {% if request.user.udata not in post.likes.all %}
+                            <button class="btn btn--link like-button" name="post_id" value="{{ thread_post.id }}" data-post-id="{{ thread_post.id }}">
+                                Like
                             </button>
-                        </form>              
+                            {% else %}
+                            <div>
+                                <button class="btn btn--link like-button" disabled> Liked </button>
+                            </div>
+                            {% endif %}
+                        </div>            
                         <h5>
                             {{ thread_post.likes.count }} likes
                         |    <a href="{% url 'thread' thread_post.id %}">See thread</a>
@@ -39,26 +44,30 @@
                 {% endfor %}
             {% endif %}
             <div class="postListPost">
-                <h5>
-                    {% if request.user.is_authenticated %}
-                        <div class="avatar avatar--small active">
+                <div class="layout__boxTitle">
+                    <div class="avatar avatar--medium active">
+                        {% if request.user.is_authenticated %}
                             <img src="{{ post.user.udata.avatar.url }}">
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                     <a href="{% url 'profile' post.user.id %}">@{{post.user.username}}</a> 
                     <div style="float: inline-end;">
                         {{post.created|timesince}} ago
                     </div>
-                </h5>
+                </div>
                 <hr>
-
                 <h4>{{post.body}}</h4>
-                <form action="{% url 'like-post' post.id %}" method="post">
-                    {% csrf_token %}
-                    <button class="btn btn--link" name="post_id" id="like-button" type="submit" value="{{ post.id }}">
+                <div>
+                    {% if request.user.udata not in post.likes.all %}
+                    <button class="btn btn--link like-button" name="post_id" value="{{ post.id }}" data-post-id="{{ post.id }}">
                         Like
                     </button>
-                </form>
+                    {% else %}
+                    <div>
+                        <button class="btn btn--link like-button" disabled> Liked </button>
+                    </div>
+                    {% endif %}
+                </div>
                 <h4>{{ post.likes.count }} likes</h4>
                 {% if request.user.is_authenticated and request.user == post.user %}
                 <span>

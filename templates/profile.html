@@ -20,16 +20,18 @@
                         <img src="{% static 'assets/avatar.svg' %}" />
                     </div>
                 {% endif %}
-                <div class="account">
-                    <h2 class="account-heading" style="text-align: center;">{{ userdata.username }}</h2>
+                <div class="">
+                    <h3 class="account-heading" style="text-align: center;">{{ userdata.username }}</h3>
                     {% if user.is_authenticated %}
-                    <p class="text-secondary"><strong>Email</strong>: {{ userdata.email }}</p>
-                    <p><strong>Bio</strong>: {{ userdata.bio }}</p>
+                    <div class="">
+                        <p class=""><strong>Email</strong>: {{ userdata.email }}</p>
+                        <p><strong>Bio</strong>: {{ userdata.bio }}</p>
+                    </div>
                     {% endif %}
                 </div>
                 <div>
                     {% if request.user.is_authenticated and request.user.username == userdata.username %}
-                        <a href="{% url 'update-user' request.user.id %}"> Update Profile </a>
+                        <a href="{% url 'update-user' request.user.id %}" > Update Profile </a>
                     {% endif %}
                 </div>
             </div>

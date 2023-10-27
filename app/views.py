@@ -198,13 +198,29 @@ def userupdate(request, pk):
         }
         return render(request, "userupdate.html", context)
 
+# @login_required
+# def likepost(request, pk):
+#     post = get_object_or_404(Posts, id=request.POST.get('post_id'))
+#     if request.user.udata not in post.likes.all():
+#         post.likes.add(request.user.udata)
+#         post.save()
+#     return HttpResponseRedirect(reverse('thread', args=[str(pk)]))
+
 @login_required
-def likepost(request, pk):
-    post = get_object_or_404(Posts, id=request.POST.get('post_id'))
-    if request.user.udata not in post.likes.all():
-        post.likes.add(request.user.udata)
-        post.save()
-    return HttpResponseRedirect(reverse('thread', args=[str(pk)]))
+def like_post(request, pk):
+    if request.method == 'POST':
+        userdata = request.user.udata
+        # Retrieve the post and add the user to the likes field
+        post = get_object_or_404(Posts, id=pk)
+        if userdata not in post.likes.all():
+            post.likes.add(userdata)
+            post.save()
+            like_count = post.likes.count()
+            return JsonResponse({'message': 'Post liked successfully', 'like_count': like_count})  
+        else:
+            return JsonResponse({'message': 'You have already liked this post'})
+
+    return JsonResponse({'message': 'Invalid request'}, status=400)
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Posts

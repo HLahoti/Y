@@ -1,8 +1,41 @@
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.like-button').on('click', function () {
+                var post_id = $(this).data('post-id');
+                var likeButton = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "like-post" 0 %}'.replace('0', post_id),
+                    data: {
+                        'post_id': post_id,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        // Directly update the like count on the page
+                        likeButton.siblings('.like-count').text(data.like_count);
+                        // var likeCountElement = likeButton.siblings('.like-count');
+                        // var likeCount = parseInt(likeCountElement.text());
+                        // likeCountElement.text(likeCount + 1); // Increment the like count
+                        likeButton.prop('disabled', true);
+                        location.reload()
+                    },
+                    error: function (error) {
+                        console.log('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
 <body>
     <div>
         {% for post in posts %}
         
-        <div class=postListPost>
+        <div class="postListPost">
             <h5>
                 {% if request.user.is_authenticated %}
                 <div class="avatar avatar--small active">
@@ -17,39 +50,44 @@
                 <div>
                     <p>replied to...</p>
                 <a href="{% url 'profile' post.parent.user.id %}">@{{post.parent.user.udata.username}}</a>
+                </div>
+                {% endif %}
+            </h5>
+            <hr>
+            <h4>{{ post.body }}</h4>
+            <div>
+                {% if request.user.udata not in post.likes.all %}
+                <div>
+                    <button class="btn btn--link like-button" name="post_id" value="{{ post.id }}" data-post-id="{{ post.id }}" style="cursor: pointer;">
+                        Like
+                    </button>
+                </div>
+                {% else %}
+                <div>
+                    <button class="btn btn--link like-button" disabled> Liked </button>
+                </div>
+                {% endif %}
+                <span class="like-count">{{ post.likes.count }}</span> likes
+                | <a href="{% url 'thread' post.id %}">See thread</a></h4> 
             </div>
+            {% if request.user.is_authenticated and request.user == post.user %}
+            <span>
+                <a href="{% url 'post-update' post.id %}" class="btn btn--link" style="position: relative; right: auto"> Update </a>
+            </span>
+            <span>
+                <a href="{% url 'post-delete' post.id %}" class="btn btn--link" style="position: relative; right: auto;"> Delete </a>
+            </span>
             {% endif %}
-        </h5>
-        <hr>
-        <h4>{{ post.body }}</h4>
-        <h4>
-            <form action="{% url 'like-post' post.id %}" method="post">
-                {% csrf_token %}
-                <button class="btn btn--link" name="post_id" type="submit" value="{{ post.id }}">
-                    Like
-                </button>
-            </form>
-            {{ post.likes.count }} likes
-            | <a href="{% url 'thread' post.id %}">See thread</a></h4> 
-        </h4>
-        {% if request.user.is_authenticated and request.user == post.user %}
-        <span>
-            <a href="{% url 'post-update' post.id %}" class="btn btn--link" style="position: relative; right: auto"> Update </a>
-        </span>
-        <span>
-            <a href="{% url 'post-delete' post.id %}" class="btn btn--link" style="position: relative; right: auto;"> Delete </a>
-        </span>
-        {% endif %}
-        <!-- {% comment %} <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-            <title>heart</title>
-            <path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/>
-        </svg>  {% endcomment %}
-        {% comment %} <svg xmlns="http://www.w3.org/2000/svg" class="with-icon--smaller" width="32" height="32" viewBox="0 0 32 32"> -->
-            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
-            <!-- <path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/>
-            </svg> {% endcomment %} -->
-            {% comment %} ? how to add link to topic for each mention of the topic in the post? {% endcomment %}
-        </div>
-        {% endfor %}
+            <!-- {% comment %} <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                <title>heart</title>
+                <path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/>
+            </svg>  {% endcomment %}
+            {% comment %} <svg xmlns="http://www.w3.org/2000/svg" class="with-icon--smaller" width="32" height="32" viewBox="0 0 32 32"> -->
+                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                <!-- <path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/>
+                </svg> {% endcomment %} -->
+                {% comment %} ? how to add link to topic for each mention of the topic in the post? {% endcomment %}
+            </div>
+            {% endfor %}
     </div>
 </body>
