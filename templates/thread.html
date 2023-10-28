@@ -14,7 +14,7 @@
                     <div class=postListPost>
                         <h5>
                             {% if request.user.is_authenticated %}
-                                <div class="avatar avatar--medium">
+                                <div class="avatar avatar--medium active">
                                     <img src="{{ thread_post.user.udata.avatar.url }}">
                                 </div>
                             {% endif %}
@@ -24,7 +24,9 @@
                             </div>
                         </h5>
                         <hr>
-                        <h5>{{thread_post.body|safe}}</h5>
+                        <div class="post_body_make">
+                            <h4>{{thread_post.body|safe}}</h4>
+                        </div>
                         <div>
                             {% if request.user.is_authenticated %}
                             {% if request.user.udata not in post.likes.all %}
@@ -58,7 +60,9 @@
                     </div>
                 </h5>
                 <hr>
-                <h4>{{post.body|safe}}</h4>
+                <div class="post_body_make"> 
+                    <h4>{{post.body|safe}}</h4>
+                </div>
                 <div>
                     {% if request.user.is_authenticated %}
                     {% if request.user.udata not in post.likes.all %}
@@ -87,7 +91,7 @@
         <div class=postList>
             {% if request.user.is_authenticated %}
             <div class="postList__header">  
-                <form method="POST" action="" class="form">
+                <form method="POST" action="{% url 'home' %}" class="form">
                     {% csrf_token %}
                     {{post_form.body}}
                     <div class="form__action">

@@ -98,15 +98,6 @@ def home(request):
             user=request.user,
             body=body
         )
-
-        mentioned_usernames = re.findall(r'@(\w+)', body)
-        mentioned_usernames = filter(lambda x: x in all_users, mentioned_usernames)
-        all_users = Udata.objects.all().values_list('username', flat=True)
-        for username in mentioned_usernames:
-            mentioned_user = Udata.objects.get(username=username)
-            profile_url = reverse('profile', kwargs={'pk': mentioned_user.userid_id})
-            post.body = post.body.replace(f'@{username}', mark_safe(f'<a href="{ profile_url }">@{username}</a>'))
-
       
         tagged = body.split()
         if len(tagged)>1:
@@ -119,18 +110,27 @@ def home(request):
                     new_topic = Topic.objects.get(name=i)
                 post.topics.add(new_topic)
         
-        mentioned_topics = re.findall(r'#(\w+)', body)
-        all_topics = Topic.objects.all().values_list('name', flat=True)
-        mentioned_topics = filter(lambda x: x in all_topics, mentioned_topics)
-        for topic in mentioned_topics:
-            mention = Topic.objects.get(name=topic)
-            topic_thread_url = mark_safe(f"/?q={mention.name}")
-            post.body = post.body.replace(f'#{topic}', f'<a href="{topic_thread_url}">#{topic}</a>')
         post.save()
         return redirect("home")
 
     post_form = PostForm()
 
+    all_users = Udata.objects.all().values_list('username', flat=True)
+    all_topics = Topic.objects.all().values_list('name', flat=True)
+    for post in posts:
+        mentioned_usernames = re.findall(r'@(\w+)', post.body)
+        mentioned_usernames = filter(lambda x: x in all_users, mentioned_usernames)
+        for username in mentioned_usernames:
+            mentioned_user = Udata.objects.get(username=username)
+            profile_url = reverse('profile', kwargs={'pk': mentioned_user.userid_id})
+            post.body = post.body.replace(f'@{username}', mark_safe(f'<a href="{ profile_url }">@{username}</a>'))
+    for post in posts:
+        mentioned_topics = re.findall(r'#(\w+)', post.body)
+        mentioned_topics = filter(lambda x: x in all_topics, mentioned_topics)
+        for topic in mentioned_topics:
+            mention = Topic.objects.get(name=topic)
+            topic_thread_url = mark_safe(f"/?q={mention.name}")
+            post.body = post.body.replace(f'#{topic}', f'<a href="{topic_thread_url}">#{topic}</a>')
     variables = {
         "posts": posts,
         "post_form": post_form,
@@ -159,15 +159,6 @@ def thread(request,pk):
             parent=og_post
         )
 
-        mentioned_usernames = re.findall(r'@(\w+)', body)
-        mentioned_usernames = filter(lambda x: x in all_users, mentioned_usernames)
-        all_users = Udata.objects.all().values_list('username', flat=True)
-        for username in mentioned_usernames:
-            mentioned_user = Udata.objects.get(username=username)
-            profile_url = reverse('profile', kwargs={'pk': mentioned_user.userid_id})
-            post.body = post.body.replace(f'@{username}', mark_safe(f'<a href="{ profile_url }">@{username}</a>'))
-
-
         if len(tagged)>1:
             tags = [i[1:31].lower() for i in tagged if i[0]=='#' and len(i)>1]
             for i in tags:
@@ -179,18 +170,62 @@ def thread(request,pk):
                     new_topic = Topic.objects.get(name=i)
                 post.topics.add(new_topic)
 
-        mentioned_topics = re.findall(r'#(\w+)', body)
-        all_topics = Topic.objects.all().values_list('name', flat=True)
+        post.save()
+        return redirect("thread",pk=pk) 
+    
+    post_form = PostForm()
+    all_users = Udata.objects.all().values_list('username', flat=True)
+    all_topics = Topic.objects.all().values_list('name', flat=True)
+
+    # parent
+    for post in thread:
+        mentioned_usernames = re.findall(r'@(\w+)', post.body)
+        mentioned_usernames = filter(lambda x: x in all_users, mentioned_usernames)
+        for username in mentioned_usernames:
+            mentioned_user = Udata.objects.get(username=username)
+            profile_url = reverse('profile', kwargs={'pk': mentioned_user.userid_id})
+            post.body = post.body.replace(f'@{username}', mark_safe(f'<a href="{ profile_url }">@{username}</a>'))
+
+    for post in thread:
+        mentioned_topics = re.findall(r'#(\w+)', post.body)
         mentioned_topics = filter(lambda x: x in all_topics, mentioned_topics)
         for topic in mentioned_topics:
             mention = Topic.objects.get(name=topic)
             topic_thread_url = mark_safe(f"/?q={mention.name}")
             post.body = post.body.replace(f'#{topic}', f'<a href="{topic_thread_url}">#{topic}</a>')
-        post.save()
 
-        return redirect("thread",pk=pk) 
-    
-    post_form = PostForm()
+    #replies
+    for post in replies:
+        mentioned_usernames = re.findall(r'@(\w+)', post.body)
+        mentioned_usernames = filter(lambda x: x in all_users, mentioned_usernames)
+        for username in mentioned_usernames:
+            mentioned_user = Udata.objects.get(username=username)
+            profile_url = reverse('profile', kwargs={'pk': mentioned_user.userid_id})
+            post.body = post.body.replace(f'@{username}', mark_safe(f'<a href="{ profile_url }">@{username}</a>'))
+
+    for post in replies:
+        mentioned_topics = re.findall(r'#(\w+)', post.body)
+        mentioned_topics = filter(lambda x: x in all_topics, mentioned_topics)
+        for topic in mentioned_topics:
+            mention = Topic.objects.get(name=topic)
+            topic_thread_url = mark_safe(f"/?q={mention.name}")
+            post.body = post.body.replace(f'#{topic}', f'<a href="{topic_thread_url}">#{topic}</a>')
+
+    #original_post
+    mentioned_usernames = re.findall(r'@(\w+)', og_post.body)
+    mentioned_usernames = filter(lambda x: x in all_users, mentioned_usernames)
+    for username in mentioned_usernames:
+        mentioned_user = Udata.objects.get(username=username)
+        profile_url = reverse('profile', kwargs={'pk': mentioned_user.userid_id})
+        og_post.body = og_post.body.replace(f'@{username}', mark_safe(f'<a href="{ profile_url }">@{username}</a>')) 
+
+    mentioned_topics = re.findall(r'#(\w+)', og_post.body)
+    mentioned_topics = filter(lambda x: x in all_topics, mentioned_topics)
+    for topic in mentioned_topics:
+        mention = Topic.objects.get(name=topic)
+        topic_thread_url = mark_safe(f"/?q={mention.name}")
+        og_post.body = og_post.body.replace(f'#{topic}', f'<a href="{topic_thread_url}">#{topic}</a>')
+
     variables = {
         "post":og_post,
         "posts":replies,

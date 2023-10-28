@@ -38,7 +38,7 @@
         <div class="postListPost">
             <h5>
                 {% if request.user.is_authenticated %}
-                <div class="avatar avatar--small active">
+                <div class="avatar avatar--medium active">
                     <img  src="{{ post.user.udata.avatar.url }}">
                 </div>
                 {% endif %}
@@ -54,7 +54,9 @@
                 {% endif %}
             </h5>
             <hr>
-            <h4>{{ post.body|safe }}</h4>
+            <div class="post_body_make">
+                <h4>{{ post.body|safe }}</h4>
+            </div>
             <div>
                 {% if request.user.is_authenticated %}
                 {% if request.user.udata not in post.likes.all %}

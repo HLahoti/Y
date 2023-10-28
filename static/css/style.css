@@ -1285,3 +1285,15 @@ a {
     border: 0.3rem solid var(--color-dark-light);
     background-color: var(--color-main);
 }
+
+.post_body_make {
+    background-color: var(--color-dark-medium); 
+}
+.post_body_make h4{
+    padding-bottom: 2%; 
+    padding-top: 1%; 
+    border: 2%; 
+    border-style: hidden; 
+    margin: 1%; 
+    border-radius: 2%;
+}
