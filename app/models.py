@@ -37,3 +37,6 @@ class Posts(models.Model):
     
     def get_absolute_url(self):
         return reverse('home')
+        
+    class Meta:
+        unique_together = ('user', 'body', 'parent')

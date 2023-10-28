@@ -19,7 +19,7 @@
                         likeButton.siblings('.like-count').text(data.like_count);
                         // var likeCountElement = likeButton.siblings('.like-count');
                         // var likeCount = parseInt(likeCountElement.text());
-                        // likeCountElement.text(likeCount + 1); // Increment the like count
+                        // likeCountElement.text(data.like_count); // Increment the like count
                         likeButton.prop('disabled', true);
                         location.reload()
                     },
@@ -56,18 +56,20 @@
             <hr>
             <h4>{{ post.body }}</h4>
             <div>
+                {% if request.user.is_authenticated %}
                 {% if request.user.udata not in post.likes.all %}
                 <div>
-                    <button class="btn btn--link like-button" name="post_id" value="{{ post.id }}" data-post-id="{{ post.id }}" style="cursor: pointer;">
+                    <button class="btn btn--pill like-button" name="post_id" value="{{ post.id }}" data-post-id="{{ post.id }}" style="cursor: pointer;">
                         Like
                     </button>
                 </div>
                 {% else %}
                 <div>
-                    <button class="btn btn--link like-button" disabled> Liked </button>
+                    <button class="btn btn--pill like-button" disabled> Liked </button>
                 </div>
                 {% endif %}
-                <span class="like-count">{{ post.likes.count }}</span> likes
+                {% endif %}
+                <span class="like-count"><strong>{{ post.likes.count }}</strong></span> likes
                 | <a href="{% url 'thread' post.id %}">See thread</a></h4> 
             </div>
             {% if request.user.is_authenticated and request.user == post.user %}

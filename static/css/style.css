@@ -1236,3 +1236,52 @@ a {
     color: var(--color-main);
     font-weight: 1.4rem;
 }
+
+.about-section {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.about-left,
+.about-right {
+    width: 48%; /* Adjust as needed */
+    padding: 20px;
+    margin-top: 5%;
+    border: 1px solid #ccc;
+    background-color:beige;
+    color:#333333;
+}
+
+.about-left {
+    border-radius: 5px 5px 5px 5px;
+}
+
+.about-right {
+    border-radius: 5px 5px 5px 5px;
+}
+.github-logo img {
+    width: 50px; /* Adjust the width as needed */
+    height: auto; /* Maintain the aspect ratio */
+    justify-content: space-between;
+}
+
+.linkedin-logo img {
+    width: auto; /* Adjust the width as needed */
+    height: 20px; /* Maintain the aspect ratio */
+    justify-content: space-between;
+}
+
+.about-image img {
+    display: flex;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+    margin: auto;
+    border-radius: 50%;
+    overflow: hidden;
+    justify-content: space-between;
+    border: 0.3rem solid var(--color-dark-light);
+    background-color: var(--color-main);
+}

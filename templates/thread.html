@@ -8,67 +8,71 @@
 <main class="layout--1">
     <div class="container">
 
-        <div class="postList">
+        <!-- <div class="postList"> -->
             {% if parentage %}
                 {% for thread_post in thread %}
                     <div class=postListPost>
-                        <div class="layout__boxTitle">
-                            <div class="avatar avatar--medium">
-                                {% if request.user.is_authenticated %}
+                        <h5>
+                            {% if request.user.is_authenticated %}
+                                <div class="avatar avatar--medium">
                                     <img src="{{ thread_post.user.udata.avatar.url }}">
-                                {% endif %}
-                            </div>
+                                </div>
+                            {% endif %}
                             <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.udata.username}}</a> 
                             <div style="float: inline-end;">
                                 {{thread_post.created|timesince}} ago
                             </div>
-                        </div>
+                        </h5>
                         <hr>
                         <h5>{{thread_post.body}}</h5>
                         <div>
+                            {% if request.user.is_authenticated %}
                             {% if request.user.udata not in post.likes.all %}
-                            <button class="btn btn--link like-button" name="post_id" value="{{ thread_post.id }}" data-post-id="{{ thread_post.id }}">
+                            <button class="btn btn--pill like-button" name="post_id" value="{{ thread_post.id }}" data-post-id="{{ thread_post.id }}">
                                 Like
                             </button>
                             {% else %}
                             <div>
-                                <button class="btn btn--link like-button" disabled> Liked </button>
+                                <button class="btn btn--pill like-button" disabled> Liked </button>
                             </div>
+                            {% endif %}
                             {% endif %}
                         </div>            
                         <h5>
-                            {{ thread_post.likes.count }} likes
+                            <strong>{{ thread_post.likes.count }}</strong> likes
                         |    <a href="{% url 'thread' thread_post.id %}">See thread</a>
                         </h5> 
                     </div>
                 {% endfor %}
             {% endif %}
             <div class="postListPost">
-                <div class="layout__boxTitle">
-                    <div class="avatar avatar--medium active">
-                        {% if request.user.is_authenticated %}
+                <h5>
+                    {% if request.user.is_authenticated %}
+                        <div class="avatar avatar--medium active">
                             <img src="{{ post.user.udata.avatar.url }}">
-                        {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
                     <a href="{% url 'profile' post.user.id %}">@{{post.user.username}}</a> 
                     <div style="float: inline-end;">
                         {{post.created|timesince}} ago
                     </div>
-                </div>
+                </h5>
                 <hr>
                 <h4>{{post.body}}</h4>
                 <div>
+                    {% if request.user.is_authenticated %}
                     {% if request.user.udata not in post.likes.all %}
-                    <button class="btn btn--link like-button" name="post_id" value="{{ post.id }}" data-post-id="{{ post.id }}">
+                    <button class="btn btn--pill like-button" name="post_id" value="{{ post.id }}" data-post-id="{{ post.id }}">
                         Like
                     </button>
                     {% else %}
                     <div>
-                        <button class="btn btn--link like-button" disabled> Liked </button>
+                        <button class="btn btn--pill like-button" disabled> Liked </button>
                     </div>
                     {% endif %}
+                    {% endif %}
                 </div>
-                <h4>{{ post.likes.count }} likes</h4>
+                <h4><strong>{{ post.likes.count }}</strong> likes</h4>
                 {% if request.user.is_authenticated and request.user == post.user %}
                 <span>
                     <a href="{% url 'post-update' post.id %}" class="btn btn--link" style="position: relative; right: auto;"> Update </a>
@@ -78,7 +82,7 @@
                 </span>
             {% endif %}
             </div>
-        </div>
+        <!-- </div> -->
 
         <div class=postList>
             {% if request.user.is_authenticated %}

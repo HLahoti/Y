@@ -83,7 +83,7 @@ def logoutUser(request):
 def home(request):
     q = request.GET.get("q") if request.GET.get("q") else ""
 
-    posts = Posts.objects.filter(
+    posts = Posts.objects.annotate(total_likes=Count('likes')).filter(
         Q(body__icontains=q) | Q(topics__name=q) | Q(user__username__icontains=q)
     ).order_by("-created","-likes")[:10]
     topics = Topic.objects.annotate(total_posts=Count('posts')).order_by("-total_posts")
@@ -169,10 +169,12 @@ def profile(request,pk):
     ).order_by("-created","-likes")[:10]
     
     topics = Topic.objects.annotate(total_posts=Count('posts__topics')).order_by("-total_posts")[:10]
+    userposts = Posts.objects.filter(user = pk).count()
     variables = {
         "userdata":userdata,
         "posts":posts,
         "topics":topics,
+        'userposts': userposts
         # "page":"profile",
     }
     return render(request,"profile.html",variables)
@@ -244,3 +246,22 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
     success_url = reverse_lazy('home')
+
+
+def about(request):
+    return render(request, 'about.html')
+
+def usermentions(request, pk):
+    userdata = Udata.objects.get(userid=pk)
+    posts = Posts.objects.filter(
+        ~Q(user__id=pk) & Q(body__icontains='@'+userdata.username)
+    ).order_by("-created","-likes")[:10]
+    
+    topics = Topic.objects.annotate(total_posts=Count('posts__topics')).order_by("-total_posts")[:10]
+    variables = {
+        "userdata":userdata,
+        "posts":posts,
+        "topics":topics,
+        # "page":"profile",
+    }
+    return render(request, 'user_mentions.html', variables)
