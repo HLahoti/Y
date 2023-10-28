@@ -1,7 +1,7 @@
 {% extends "base_templates/main.html" %}
 
 {% block title %}
-Y
+Project-Y
 {% endblock title %}
 
 {% block content %}
@@ -15,18 +15,20 @@ Y
             <div class="postList__header">  
                 <form method="POST" action="" class="form">
                     {% csrf_token %}
-                    {{post_form.body}}
+                    {{ post_form.body }}
                     <div class="form__action">
                         <button class="btn btn--main" type="submit" value="submit">
-                        Post
+                            Post
                         </button>
                     </div>
                 </form>
             </div>
             {% endif %}
-            {% include "components/feed_component.html" %}
+            <div class="about-header" style="margin: 2%; text-align: center;">
+                <h1>- Recent Posts -</h1>
+            </div>
+            {% include "components/feed_component.html" %} 
         </div>
-        
     </div>
 </main>
 

@@ -1,5 +1,5 @@
 {% extends "base_templates/main.html" %}
-
+{% load static %}
 {% block title %}
 {{userdata.username}}
 {% endblock title %}
@@ -7,21 +7,48 @@
 {% block content %}
 <main class="layout layout--2">
     <div class="container">
-
         {% include "components/topic_component.html" %}
-
+        
         <div class="postList">
             <div class="postList__header vert">
-                <h2>
-                    {{userdata.username}}
-                </h2>
-                <h3>
-                    {{userdata.name}}
-                </h3>
+                {% if user.is_authenticated %}
+                    <div class="avatar avatar--large active">
+                        <img  src="{{ userdata.avatar.url }}">
+                    </div>
+                {% else %}
+                    <div class="avatar avatar--large active">
+                        <img src="{% static 'assets/avatar.svg' %}" />
+                    </div>
+                {% endif %}
+                <div class="">
+                    <h3 class="account-heading" style="text-align: center;">{{ userdata.username }}</h3>
+                    {% if user.is_authenticated %}
+                    <div class="">
+                        <p class=""><strong>Email</strong>: {{ userdata.email }}</p>
+                        <p><strong>Bio</strong>: {{ userdata.bio }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if request.user.is_authenticated and request.user.username == userdata.username %}
+                        <a href="{% url 'update-user' request.user.id %}" > Update Profile </a>
+                    {% endif %}
+                </div>
+                <div style="padding: 1%;">
+                    {% if request.user.is_authenticated and request.user.username == userdata.username %}
+                    <a href="{% url 'user-mentions' request.user.id %}" > Mentions </a>
+                    {% endif %}
+                </div>
             </div>
-            {% include "components/feed_component.html" %}
+            <div>
+                Total posts = {{ userposts }}
+            </div>
+            <h3>Posts by {{ userdata.username }}</h3>
+            <hr>
+            <div>
+                {% include "components/feed_component.html" %}
+            </div>
         </div>
-        
     </div>
 </main>
 {% endblock content %}

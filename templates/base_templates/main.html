@@ -6,12 +6,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}
     {% endblock title %}</title>
+    <!-- Bootstrap CSS -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.like-button').on('click', function () {
+                var post_id = $(this).data('post-id');
+                var likeButton = $(this);
+    
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "like-post" 0 %}'.replace('0', post_id),
+                    data: {
+                        'post_id': post_id,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        // Directly update the like count on the page
+                        var likeCountElement = likeButton.siblings('.like-count');
+                        var likeCountText = likeCountElement.text();
+                        
+                        // Parse the like count as an integer and handle potential errors
+                        var likeCount = parseInt(likeCountText);
+                        if (!isNaN(likeCount)) {
+                            likeCountElement.text(likeCount + 1); // Increment the like count
+                        } else {
+                            // Handle the case where the like count couldn't be parsed
+                            console.log('Error parsing like count:', likeCountText);
+                        }
+                        likeButton.text('Liked');
+                        likeButton.prop('disabled', true);
+                    },
+                    error: function (error) {
+                        console.log('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+    
 </head>
 <body>
     {% include "base_templates/navbar.html" %}
     {% block content %}
     {% endblock content %}
     <script src="{% static 'js/script.js' %}"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
 </body>
 </html>

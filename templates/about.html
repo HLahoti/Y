@@ -1,0 +1,63 @@
+{% extends 'base_templates/main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="flex: auto;">
+        <div class="about-header" style="margin-top: 2%;text-align: center;">
+            <h1>
+                <strong>
+                    ITW-2(CSO-205) Project
+                </strong>
+            </h1>
+            <h5>
+                CSE 3rd semester
+            </h5>
+            <p>Micro-blogging website</p>
+        </div>
+</div>
+
+<div class="container">
+    <div class="about-section">
+        <div class="about-left">
+            <h1>Harsh Lahoti</h1>
+            <p>Roll No. 22074012</p>
+            <div class="about-image" style="float: inline-end;">
+                <img src="{% static 'assets/LahotiH.jpg' %}" alt="Harsh Lahoti">
+            </div>
+            <div>
+                <div class="github-logo" style="position: absolute; bottom: 2rem;">
+                    <a href="https://github.com/HLahoti" target="_blank">
+                        <img src="{% static 'assets/github-mark.png' %}" alt="Github Logo">
+                    </a>
+                </div>
+                <div class="linkedin-logo" style="position: absolute; bottom: 3rem; left: 9rem;">
+                    <a href="https://www.linkedin.com/in/harsh-lahoti-220438258/" target="_blank">
+                        <img src="{% static 'assets/LinkedIn-mark.png' %}" alt="LinkedIn Logo">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="about-right">
+            <h1>Gaurav Dalvi</h1>
+            <p>Roll No. 22074010
+            </p>
+            <div class="about-image" style="float: inline-end;">
+                <img src="{% static 'assets/GauravD.jpg' %}" alt="Gaurav Dalvi">
+            </div>
+            <div>
+                <div class="github-logo" style="position: absolute; bottom: 2rem;">
+                    <a href="https://github.com/GGodSSpeed" target="_blank">
+                        <img src="{% static 'assets/github-mark.png' %}" alt="Github Logo">
+                    </a>
+                </div>
+                <div class="linkedin-logo" style="position: absolute; bottom: 3rem; right: 40rem;">
+                    <a href="https://www.linkedin.com/in/gaurav-dalvi-339782248/" target="_blank">
+                        <img src="{% static 'assets/LinkedIn-mark.png' %}" alt="LinkedIn Logo">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

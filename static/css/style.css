@@ -188,7 +188,7 @@ a {
     display: block;
     width: 8rem;
     height: 8rem;
-    border-radius: 50%;
+    border-radius: 70%;
 }
 
 .avatar.avatar--large:after {
@@ -283,8 +283,8 @@ a {
 }
 
 .header__logo>img {
-    height: 3.2rem;
-    width: 3.2rem;
+    height: 4rem;
+    width: 4rem;
 }
 
 .header__logo>h1 {
@@ -479,6 +479,7 @@ a {
 
 .layout__body {
     margin: 3rem;
+    height: auto;
 }
 
 @media screen and (max-width: 900px) {
@@ -1234,4 +1235,65 @@ a {
     font-weight: 500;
     color: var(--color-main);
     font-weight: 1.4rem;
+}
+
+.about-section {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.about-left,
+.about-right {
+    width: 48%; /* Adjust as needed */
+    padding: 20px;
+    margin-top: 5%;
+    border: 1px solid #ccc;
+    background-color:beige;
+    color:#333333;
+}
+
+.about-left {
+    border-radius: 5px 5px 5px 5px;
+}
+
+.about-right {
+    border-radius: 5px 5px 5px 5px;
+}
+.github-logo img {
+    width: 50px; /* Adjust the width as needed */
+    height: auto; /* Maintain the aspect ratio */
+    justify-content: space-between;
+}
+
+.linkedin-logo img {
+    width: auto; /* Adjust the width as needed */
+    height: 20px; /* Maintain the aspect ratio */
+    justify-content: space-between;
+}
+
+.about-image img {
+    display: flex;
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    object-position: center;
+    margin: auto;
+    border-radius: 50%;
+    overflow: hidden;
+    justify-content: space-between;
+    border: 0.3rem solid var(--color-dark-light);
+    background-color: var(--color-main);
+}
+
+.post_body_make {
+    background-color: var(--color-dark-medium); 
+}
+.post_body_make h4{
+    padding-bottom: 2%; 
+    padding-top: 1%; 
+    border: 2%; 
+    border-style: hidden; 
+    margin: 1%; 
+    border-radius: 2%;
 }

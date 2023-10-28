@@ -31,6 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'debug_toolbar',
+    'crispy_forms',
+    'crispy_bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,6 +53,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+INTERNAL_IPS = [
+    '127.0.0.1', 
+]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
+}
 
 ROOT_URLCONF = 'Y.urls'
 
@@ -77,9 +89,9 @@ WSGI_APPLICATION = 'Y.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "ydb",
+        'NAME': "y_db",
         'USER': 'yadmin',
-        'PASSWORD': 'ypassword123',
+        'PASSWORD': 'Ypassword',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -120,14 +132,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+STATIC_URL = 'static/'
 MEDIA_URL = "assets/"
+MEDIA_ROOT = BASE_DIR / "static/assets"
+
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 
-MEDIA_ROOT = BASE_DIR / "static/assets"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
