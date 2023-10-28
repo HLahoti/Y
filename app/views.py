@@ -10,6 +10,9 @@ from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import DeleteView, UpdateView
+import re
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 
 # Create your views here.
 def loginUser(request):
@@ -91,11 +94,21 @@ def home(request):
 
     if request.method == "POST":
         body = request.POST.get("body")
-        tagged = body.split()
         post = Posts.objects.create(
             user=request.user,
             body=body
         )
+
+        mentioned_usernames = re.findall(r'@(\w+)', body)
+        mentioned_usernames = filter(lambda x: x in all_users, mentioned_usernames)
+        all_users = Udata.objects.all().values_list('username', flat=True)
+        for username in mentioned_usernames:
+            mentioned_user = Udata.objects.get(username=username)
+            profile_url = reverse('profile', kwargs={'pk': mentioned_user.userid_id})
+            post.body = post.body.replace(f'@{username}', mark_safe(f'<a href="{ profile_url }">@{username}</a>'))
+
+      
+        tagged = body.split()
         if len(tagged)>1:
             tags = [i[1:31].lower() for i in tagged if i[0]=='#' and len(i)>1]
             for i in tags:
@@ -105,6 +118,14 @@ def home(request):
                 else:
                     new_topic = Topic.objects.get(name=i)
                 post.topics.add(new_topic)
+        
+        mentioned_topics = re.findall(r'#(\w+)', body)
+        all_topics = Topic.objects.all().values_list('name', flat=True)
+        mentioned_topics = filter(lambda x: x in all_topics, mentioned_topics)
+        for topic in mentioned_topics:
+            mention = Topic.objects.get(name=topic)
+            topic_thread_url = mark_safe(f"/?q={mention.name}")
+            post.body = post.body.replace(f'#{topic}', f'<a href="{topic_thread_url}">#{topic}</a>')
         post.save()
         return redirect("home")
 
@@ -137,6 +158,16 @@ def thread(request,pk):
             body=body,
             parent=og_post
         )
+
+        mentioned_usernames = re.findall(r'@(\w+)', body)
+        mentioned_usernames = filter(lambda x: x in all_users, mentioned_usernames)
+        all_users = Udata.objects.all().values_list('username', flat=True)
+        for username in mentioned_usernames:
+            mentioned_user = Udata.objects.get(username=username)
+            profile_url = reverse('profile', kwargs={'pk': mentioned_user.userid_id})
+            post.body = post.body.replace(f'@{username}', mark_safe(f'<a href="{ profile_url }">@{username}</a>'))
+
+
         if len(tagged)>1:
             tags = [i[1:31].lower() for i in tagged if i[0]=='#' and len(i)>1]
             for i in tags:
@@ -147,6 +178,14 @@ def thread(request,pk):
                 else:
                     new_topic = Topic.objects.get(name=i)
                 post.topics.add(new_topic)
+
+        mentioned_topics = re.findall(r'#(\w+)', body)
+        all_topics = Topic.objects.all().values_list('name', flat=True)
+        mentioned_topics = filter(lambda x: x in all_topics, mentioned_topics)
+        for topic in mentioned_topics:
+            mention = Topic.objects.get(name=topic)
+            topic_thread_url = mark_safe(f"/?q={mention.name}")
+            post.body = post.body.replace(f'#{topic}', f'<a href="{topic_thread_url}">#{topic}</a>')
         post.save()
 
         return redirect("thread",pk=pk) 

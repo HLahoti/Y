@@ -24,7 +24,7 @@
                             </div>
                         </h5>
                         <hr>
-                        <h5>{{thread_post.body}}</h5>
+                        <h5>{{thread_post.body|safe}}</h5>
                         <div>
                             {% if request.user.is_authenticated %}
                             {% if request.user.udata not in post.likes.all %}
@@ -58,7 +58,7 @@
                     </div>
                 </h5>
                 <hr>
-                <h4>{{post.body}}</h4>
+                <h4>{{post.body|safe}}</h4>
                 <div>
                     {% if request.user.is_authenticated %}
                     {% if request.user.udata not in post.likes.all %}

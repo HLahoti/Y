@@ -25,7 +25,7 @@
                     <h2>Are you sure, you want to <strong>delete</strong> the post ?</h2>
                     <div class="postListPost">
                         <h3>Author - <i>{{ object.user }}</i></h3>
-                        <h4>Content - {{ object.body }}</h4>
+                        <h4>Content - {{ object.body|safe}}</h4>
                     </div>
                     <div class="form__action">
                         <button type="submit" class="btn btn--main">Delete</button>

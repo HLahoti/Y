@@ -54,7 +54,7 @@
                 {% endif %}
             </h5>
             <hr>
-            <h4>{{ post.body }}</h4>
+            <h4>{{ post.body|safe }}</h4>
             <div>
                 {% if request.user.is_authenticated %}
                 {% if request.user.udata not in post.likes.all %}
