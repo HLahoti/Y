@@ -308,6 +308,9 @@ def usermentions(request, pk):
     ).order_by("-created","-likes")[:10]
     
     topics = Topic.objects.annotate(total_posts=Count('posts__topics')).order_by("-total_posts")[:10]
+    all_users = Udata.objects.all().values_list('username', flat=True)
+    all_topics = Topic.objects.all().values_list('name', flat=True)
+    tagging(all_users, all_topics, posts)
     variables = {
         "userdata":userdata,
         "posts":posts,

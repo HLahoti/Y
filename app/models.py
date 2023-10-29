@@ -14,7 +14,7 @@ class Udata(models.Model):
     userid = models.OneToOneField(User,on_delete=models.CASCADE,null=False)
     name = models.CharField(max_length=100,null=False)
     email = models.EmailField(null=False,unique=True)
-    bio = models.TextField(null=True)
+    bio = models.TextField(null=True, default=None)
     avatar = models.ImageField(null=True, default="avatar.svg", upload_to='profile_pics')
     username = models.CharField(max_length=40,null=False)
     created = models.DateTimeField(auto_now_add=True)
