@@ -91,7 +91,7 @@
         <div class=postList>
             {% if request.user.is_authenticated %}
             <div class="postList__header">  
-                <form method="POST" action="{% url 'home' %}" class="form">
+                <form method="POST" action="" class="form">
                     {% csrf_token %}
                     {{post_form.body}}
                     <div class="form__action">
