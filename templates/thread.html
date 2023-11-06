@@ -11,17 +11,18 @@
         <!-- <div class="postList"> -->
             {% if parentage %}
                 {% for thread_post in thread %}
-                    <div class=postListPost>
+                    {% comment %} <div class=postListPost>
                         <h5>
                             {% if request.user.is_authenticated %}
                                 <div class="avatar avatar--medium active">
                                     <img src="{{ thread_post.user.udata.avatar.url }}">
                                 </div>
                             {% endif %}
-                            <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.udata.username}}</a> 
                             <div style="float: inline-end;">
                                 {{thread_post.created|timesince}} ago
                             </div>
+                            <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.udata.username}}</a> 
+                            
                         </h5>
                         <hr>
                         <div class="post_body_make">
@@ -30,9 +31,11 @@
                         <div>
                             {% if request.user.is_authenticated %}
                             {% if request.user.udata not in post.likes.all %}
-                            <button class="btn btn--pill like-button" name="post_id" value="{{ thread_post.id }}" data-post-id="{{ thread_post.id }}">
-                                Like
-                            </button>
+                            <div>
+                                <button class="btn btn--pill like-button" name="post_id" value="{{ thread_post.id }}" data-post-id="{{ thread_post.id }}">
+                                    Like
+                                </button>
+                            </div>
                             {% else %}
                             <div>
                                 <button class="btn btn--pill like-button" disabled> Liked </button>
@@ -44,10 +47,58 @@
                             <strong>{{ thread_post.likes.count }}</strong> likes
                         |    <a href="{% url 'thread' thread_post.id %}">See thread</a>
                         </h5> 
+                    </div> {% endcomment %}
+                    <div class="postListPost">
+                        <h5>
+                            {% if request.user.is_authenticated %}
+                            <div class="avatar avatar--medium active">
+                                <img  src="{{ thread_post.user.udata.avatar.url }}">
+                            </div>
+                            {% endif %}
+                            <div style="float: inline-end;">
+                                {{ thread_post.created|timesince }} ago
+                            </div>
+                            <a href="{% url 'profile' thread_post.user.id %}">@{{thread_post.user.udata.username}}</a> 
+                            {% if thread_post.parent is not NULL %}
+                            <div>
+                                <p>replied to...</p>
+                            <a href="{% url 'profile' thread_post.parent.user.id %}">@{{thread_post.parent.user.udata.username}}</a>
+                            </div>
+                            {% endif %}
+                        </h5>
+                        <hr>
+                        <div class="post_body_make">
+                            <h4>{{ thread_post.body|safe }}</h4>
+                        </div>
+                        <div>
+                            {% if request.user.is_authenticated %}
+                            {% if request.user.udata not in thread_post.likes.all %}
+                            <div>
+                                <button class="btn btn--pill like-button" name="post_id" value="{{ thread_post.id }}" data-post-id="{{ thread_post.id }}" style="cursor: pointer;">
+                                    Like
+                                </button>
+                            </div>
+                            {% else %}
+                            <div>
+                                <button class="btn btn--pill like-button" disabled> Liked </button>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                            <span class="like-count"><strong>{{ thread_post.likes.count }}</strong></span> likes
+                            | <a href="{% url 'thread' thread_post.id %}">See thread</a></h4> 
+                        </div>
+                        {% if request.user.is_authenticated and request.user == thread_post.user %}
+                        <span>
+                            <a href="{% url 'post-update' thread_post.id %}" class="btn btn--link" style="position: relative; right: auto"> Update </a>
+                        </span>
+                        <span>
+                            <a href="{% url 'post-delete' thread_post.id %}" class="btn btn--link" style="position: relative; right: auto;"> Delete </a>
+                        </span>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% endif %}
-            <div class="postListPost">
+            {% comment %} <div class="postListPost">
                 <h5>
                     {% if request.user.is_authenticated %}
                         <div class="avatar avatar--medium active">
@@ -85,6 +136,53 @@
                     <a href="{% url 'post-delete' post.id %}" class="btn btn--link" style="position: relative; right: auto;"> Delete </a>
                 </span>
             {% endif %}
+            </div> {% endcomment %}
+            <div class="postListPost">
+                <h5>
+                    {% if request.user.is_authenticated %}
+                    <div class="avatar avatar--medium active">
+                        <img  src="{{ post.user.udata.avatar.url }}">
+                    </div>
+                    {% endif %}
+                    <div style="float: inline-end;">
+                        {{ post.created|timesince }} ago
+                    </div>
+                    <a href="{% url 'profile' post.user.id %}">@{{post.user.udata.username}}</a> 
+                    {% if post.parent is not NULL %}
+                    <div>
+                        <p>replied to...</p>
+                    <a href="{% url 'profile' post.parent.user.id %}">@{{post.parent.user.udata.username}}</a>
+                    </div>
+                    {% endif %}
+                </h5>
+                <hr>
+                <div class="post_body_make">
+                    <h4>{{ post.body|safe }}</h4>
+                </div>
+                <div>
+                    {% if request.user.is_authenticated %}
+                    {% if request.user.udata not in post.likes.all %}
+                    <div>
+                        <button class="btn btn--pill like-button" name="post_id" value="{{ post.id }}" data-post-id="{{ post.id }}" style="cursor: pointer;">
+                            Like
+                        </button>
+                    </div>
+                    {% else %}
+                    <div>
+                        <button class="btn btn--pill like-button" disabled> Liked </button>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    <span class="like-count"><strong>{{ post.likes.count }}</strong></span> likes</h4> 
+                </div>
+                {% if request.user.is_authenticated and request.user == post.user %}
+                <span>
+                    <a href="{% url 'post-update' post.id %}" class="btn btn--link" style="position: relative; right: auto"> Update </a>
+                </span>
+                <span>
+                    <a href="{% url 'post-delete' post.id %}" class="btn btn--link" style="position: relative; right: auto;"> Delete </a>
+                </span>
+                {% endif %}
             </div>
         <!-- </div> -->
 
